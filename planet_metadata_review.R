@@ -3,7 +3,7 @@ library(tidyverse)
 library(lubridate)
 
 # Directory to contain all target metadata files
-directory <- "D:/SERDP/Huachuca/Planet/output_imagery"
+directory <- "D:/SERDP/Mission_Creek/Planet"
 
 # Read in all files in target directory
 filenames <- list.files(path=directory, pattern="*.xml")
@@ -76,9 +76,11 @@ for(filename in filenames)
   metadata <- rbind(metadata, new_observation)
 }
 
+# Reprocess date into other more useful formats
 metadata$year <- as.numeric(substr(as.character(metadata$date),1,4))
 metadata$month <- as.numeric(substr(as.character(metadata$date),6,7))
 metadata$day <- as.numeric(substr(as.character(metadata$date),9,10))
 metadata$doy <- lubridate::yday(metadata$date)
 
+# Drop bad metadata files (missing some of the information)
 metadata <- metadata %>% drop_na()
